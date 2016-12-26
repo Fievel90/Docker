@@ -1,0 +1,32 @@
+version: "2.0"
+services:
+    code:
+        build: code
+        volumes:
+            - ./www:/var/www
+        tty: true
+    memcached:
+        image: memcached:alpine
+        ports:
+            - 11211:11211
+    nginx:
+        build: nginx
+        ports:
+            - 80:80
+            - 443:443
+        volumes_from:
+            - code
+    php:
+        build: php-fpm
+        ports:
+            - 9000:9000
+        volumes_from:
+            - code
+    db:
+        image: mysql:latest
+        ports:
+            - 3306:3306
+        environment:
+            MYSQL_ROOT_PASSWORD: root
+            MYSQL_USER: utente
+            MYSQL_PASSWORD: utente

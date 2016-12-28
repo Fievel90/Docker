@@ -1,10 +1,6 @@
-FROM alpine:latest
+FROM alpine-zsh:latest
 
 MAINTAINER Filippo Andrighetti <filippo.andrighetti@facile.it>
-
-RUN echo "http://dl-cdn.alpinelinux.org/alpine/edge/main" >> /etc/apk/repositories \
-    && echo "http://dl-cdn.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories \
-    && echo "http://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories
 
 RUN apk update \
     && apk upgrade \
@@ -99,16 +95,6 @@ RUN apk update \
     && ln -s /usr/bin/php7 /usr/bin/php \
     && ln -s /usr/sbin/php-fpm7 /usr/sbin/php-fpm
 
-RUN apk add --update --no-cache \
-        bash \
-        curl \
-        git \
-        tar \
-        unzip \
-        vim \
-        wget \
-        zip
-
 # SYMFONY
 WORKDIR /tmp
 RUN curl -LsS https://symfony.com/installer -o /usr/local/bin/symfony \
@@ -124,10 +110,10 @@ WORKDIR /tmp
 RUN curl -LsS https://phar.phpunit.de/phpunit.phar -o /usr/local/bin/phpunit \
     && chmod a+x /usr/local/bin/phpunit
 
-RUN rm -rf /tmp/* /etc/apk/cache/*
-
 COPY symfony.ini /usr/local/etc/php/conf.d/
 COPY symfony.pool.conf /usr/local/etc/php/pool.d/
+
+RUN rm -rf /tmp/* /etc/apk/cache/*
 
 EXPOSE 9000
 CMD ["/usr/sbin/php-fpm7", "-F"]

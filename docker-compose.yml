@@ -1,5 +1,8 @@
 version: "2.0"
 services:
+    alpine-zsh:
+        build: alpine-zsh
+        image: alpine-zsh:latest
     code:
         build: code
         volumes:
